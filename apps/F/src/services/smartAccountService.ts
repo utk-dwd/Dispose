@@ -32,10 +32,10 @@ export class PimlicoSmartAccountService {
   private pimlicoClient
   
   // This should be the deployed EntropyWallet contract address
-  private readonly ENTROPY_WALLET_CONTRACT = '0x3934C2Dbf9f2c6117f31E192d068BF55Fc59622c' // From deployment
+  private readonly ENTROPY_WALLET_CONTRACT = '0x9EfBc6B348CA65bCEda3f4C2afAfbd000d504c79' // From deployment
   
   // Pimlico API endpoints for Base mainnet
-  private readonly PIMLICO_API_KEY = 'pim_YOUR_API_KEY_HERE' // TODO: Add your Pimlico API key
+  private readonly PIMLICO_API_KEY = 'pim_8uca1WhbanoskAvmZminZq' // Your actual API key
   private readonly PIMLICO_BUNDLER_URL = `https://api.pimlico.io/v2/base/rpc?apikey=${this.PIMLICO_API_KEY}`
 
   constructor() {
