@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import * as React from 'react'
-import { pythEntropyService, type Wallet } from '../services/pythService'
+import { smartAccountService } from '../services/simpleSmartAccountService'
 
 export interface WalletEntry {
   address: string
@@ -59,14 +59,25 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [history, setHistory] = React.useState<WalletEntry[]>([])
   const [isGenerating, setIsGenerating] = React.useState(false)
 
-  // Load from localStorage on mount
+  // Auto-load from localStorage on mount or generate new wallet
   React.useEffect(() => {
-    const stored = loadFromStorage()
-    if (stored) {
-      setWallet(stored.wallet)
-      setHistory(stored.history || [])
+    const initializeWallet = async () => {
+      const stored = loadFromStorage()
+      if (stored && stored.wallet && stored.wallet.address) {
+        // Load existing wallet from localStorage
+        console.log('📱 Loading existing disposable wallet:', stored.wallet.address)
+        setWallet(stored.wallet)
+        setHistory(stored.history || [])
+      } else {
+        // No wallet found, automatically generate new one
+        console.log('🔄 No existing wallet found, creating new disposable wallet...')
+        await getWallet()
+      }
     }
-  }, [])
+    
+    // Only initialize once on mount
+    initializeWallet().catch(console.error)
+  }, []) // Remove getWallet dependency to prevent loops
 
   // Save to localStorage whenever wallet or history changes
   React.useEffect(() => {
@@ -76,27 +87,31 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const getWallet = React.useCallback(async () => {
     setIsGenerating(true)
     try {
-      const generatedWallet = await pythEntropyService.generateWallet()
-      const entry: WalletEntry = {
+      console.log('🔄 Creating disposable wallet...')
+      
+      // Only use smart account approach - no local fallback
+      console.log('🔗 Creating smart account with Pyth entropy')
+      const generatedWallet = await smartAccountService.generateSmartWallet()
+      
+      const walletEntry: WalletEntry = {
         address: generatedWallet.address,
-        balance: parseFloat((Math.random() * 0.5).toFixed(4)),
-        network: 'Base', // Using Base network as requested
+        balance: 0, // Smart accounts start with 0 balance
+        network: generatedWallet.network || 'Base',
         createdAt: Date.now(),
-        privateKey: generatedWallet.privateKey
+        privateKey: generatedWallet.privateKey || generatedWallet.address
       }
-      setWallet(entry)
-      setHistory(h => [entry, ...h].slice(0, 20))
+      
+      // Add enhanced security info if available
+      if (generatedWallet.contractWallet) {
+        console.log('✅ Enhanced security wallet created:', generatedWallet.contractWallet)
+      }
+      
+      setWallet(walletEntry)
+      setHistory(prev => [walletEntry, ...prev.slice(0, 9)]) // Keep last 10
     } catch (error) {
-      console.error('Error generating wallet:', error)
-      // Fallback to previous method if randomness service fails
-      const entry: WalletEntry = {
-        address: '0x' + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join(''),
-        balance: parseFloat((Math.random() * 0.5).toFixed(4)),
-        network: 'Base',
-        createdAt: Date.now()
-      }
-      setWallet(entry)
-      setHistory(h => [entry, ...h].slice(0, 20))
+      console.error('Failed to generate smart wallet:', error)
+      // No fallback - smart account is required
+      throw new Error('Smart wallet creation failed. Please try again.')
     } finally {
       setIsGenerating(false)
     }

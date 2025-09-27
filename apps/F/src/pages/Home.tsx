@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useWallet } from '../context/WalletContext'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
@@ -9,20 +8,20 @@ import { Link } from 'react-router-dom'
 export default function HomePage() {
   const { wallet, getWallet, refreshBalance, deleteWallet, copyWallet, history, isGenerating } = useWallet()
 
-  useEffect(() => {
-    if (!wallet && !isGenerating) {
-      getWallet().catch(console.error)
-    }
-  }, [wallet, isGenerating, getWallet])
+  // Wallet is automatically loaded/generated in WalletContext
+  // No need for manual triggering here
 
   return (
     <div className="space-y-8">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle>Current Wallet</CardTitle>
+            <CardTitle>Disposable Wallet</CardTitle>
             <p className="text-xs text-black/60 dark:text-white/60 mt-1">
-              🎲 Secured by Pyth Network entropy on Base
+              {isGenerating 
+                ? '🔄 Creating your disposable wallet...' 
+                : '🔒 Secure temporary wallet on Base network'
+              }
             </p>
           </div>
           <Button size="sm" variant="secondary" asChild>
@@ -32,12 +31,17 @@ export default function HomePage() {
         <CardContent className="space-y-6">
           <div className="space-y-2">
             <label className="text-xs font-medium uppercase text-black/60 dark:text-white/60">Address</label>
-            <Input readOnly value={wallet?.address ?? ''} className="font-mono" />
+            <Input 
+              readOnly 
+              value={isGenerating ? 'Creating disposable wallet...' : (wallet?.address ?? '')} 
+              className="font-mono" 
+              disabled={isGenerating}
+            />
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div className="col-span-2 md:col-span-1">
               <div className="text-xs text-black/60 dark:text-white/60">Type</div>
-              <div className="font-medium text-black dark:text-white">EVM Wallet</div>
+              <div className="font-medium text-black dark:text-white">Disposable Wallet</div>
             </div>
             <div className="col-span-2 md:col-span-3">
               <div className="text-xs text-black/60 dark:text-white/60">Total Balance (USD)</div>
@@ -49,7 +53,7 @@ export default function HomePage() {
               onClick={() => getWallet().catch(console.error)} 
               disabled={isGenerating}
             >
-              {isGenerating ? '🎲 Generating...' : 'Change'}
+              {isGenerating ? '🔄 Creating...' : 'New Disposable Wallet'}
             </Button>
             <Button variant="outline" onClick={refreshBalance}>Refresh</Button>
             <Button variant="outline" onClick={() => deleteWallet().catch(console.error)}>Delete</Button>
