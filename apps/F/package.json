@@ -10,32 +10,34 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@pythnetwork/entropy-sdk-solidity": "^2.0.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "ethers": "^6.13.4",
+    "lucide-react": "^0.469.0",
+    "permissionless": "^0.2.57",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.0.2",
-    "lucide-react": "^0.469.0",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.1",
     "tailwind-merge": "^2.5.3",
-    "@radix-ui/react-slot": "^1.1.0",
-    "ethers": "^6.13.4",
-    "@pythnetwork/entropy-sdk-solidity": "^2.0.0"
+    "viem": "^2.37.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.3",
+    "autoprefixer": "^10.4.20",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.4.0",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.15",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.44.0",
     "vite": "^7.1.7",
-    "vite-tsconfig-paths": "^5.1.4",
-    "tailwindcss": "^3.4.15",
-    "postcss": "^8.4.47",
-    "autoprefixer": "^10.4.20"
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }
