@@ -1,73 +1,144 @@
-# React + TypeScript + Vite
+<div align="center">
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🗑️ Disposable Wallets (Frontend Prototype)
 
-Currently, two official plugins are available:
+Minimal, responsive "temp wallet" interface inspired by temp-mail.org – built with React + TypeScript, TailwindCSS, and shadcn-style components. Purely frontend (no real chain calls) with mocked wallet generation & history.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+</div>
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Generate ephemeral mock wallets (address, balance, network)
+- One-click actions: Get Wallet, Copy, Refresh Balance, Delete (replace)
+- Wallet history table (recent 20)
+- Responsive layout (desktop multi-column / mobile stacked)
+- Clean minimalist UI with bright mint highlight (#00FF91)
+- Mock login flow (Privy placeholder) & navigation tabs (Home / History / Settings)
 
-## Expanding the ESLint configuration
+## 🧱 Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React 19 + TypeScript + Vite
+- TailwindCSS (custom config with mint theme + glow effects)
+- shadcn-inspired headless components (Button, Card, Table, etc.)
+- Radix Slot primitive (`@radix-ui/react-slot`)
+- class-variance-authority + tailwind-merge + clsx
+- React Router v7
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📁 Project Structure
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+apps/F/
+  src/
+    components/
+      ui/ (primitive reusable components)
+      Layout.tsx (Header/Footer/Layout wrappers)
+    context/WalletContext.tsx (mock wallet state + history)
+    pages/ (Home, Login, History, Settings, Deep placeholder)
+    lib/utils.ts (cn utility)
+    App.tsx (routing + providers)
+    main.tsx (entry)
+  tailwind.config.ts
+  postcss.config.js
+  index.html
+  package.json
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🚀 Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 1. Install Dependencies
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm install
 ```
+
+### 2. Run Dev Server
+
+```bash
+pnpm dev
+```
+Visit: http://localhost:5173
+
+### 3. Type Check
+
+```bash
+pnpm exec tsc --noEmit
+```
+
+### 4. Lint
+
+```bash
+pnpm run lint
+```
+
+### 5. Production Build
+
+```bash
+pnpm build
+```
+
+### 6. Preview Build
+
+```bash
+pnpm preview
+```
+
+## 🧪 Mock Behavior
+
+- Addresses are random hex (no persistence)
+- Balance is random per refresh (0 → 0.5 ETH range mock)
+- Networks rotate between: Base / Ethereum / Arbitrum
+- Delete simply generates a new wallet (history retained)
+
+## 🖥️ UI / UX Notes
+
+- Desktop: Header + content area + footer action bar
+- Mobile: Stacked sections; actions available near primary wallet card
+- Bright Mint (#00FF91) used for primary actions + highlights
+- Cards: rounded-2xl, soft shadow, subtle hover scale
+- Tooltips: lightweight (title attribute placeholder; can upgrade to Radix Tooltip later)
+
+## 🧩 Components Implemented
+
+- Button (variants: default, secondary, outline, ghost, destructive)
+- Card (Header/Title/Description/Content/Footer)
+- Table (simple responsive wrapper)
+- Input, Badge, Separator, ScrollArea, Tooltip (placeholder)
+- Layout (Header, Footer, ActionBar, AppLayout)
+
+## 🔐 Auth Placeholder
+
+`/login` simulates Privy sign-in (no external SDK included). After click → redirect to `/`.
+
+## 🛠️ Customization
+
+- Adjust theme in `tailwind.config.ts`
+- Extend variants in `src/components/ui/button.tsx`
+- Add real chain integrations by replacing logic in `WalletContext.tsx`
+
+## 📦 Libraries Used
+
+| Library | Purpose |
+|---------|---------|
+| react / react-dom | UI rendering |
+| react-router-dom | Client routing |
+| tailwindcss + autoprefixer + postcss | Styling |
+| class-variance-authority | Variantable component patterns |
+| tailwind-merge / clsx | Class name composition |
+| @radix-ui/react-slot | Slot primitive for polymorphic components |
+
+## 🧪 Future Enhancements (Ideas)
+
+- Real Privy auth & session gating
+- Real wallet provisioning (AA / custodial service)
+- Balance polling & toast notifications
+- Export history (JSON / CSV)
+- Replace tooltip placeholder with Radix Tooltip
+- Dark mode toggle
+
+## 📄 License
+
+Prototype code – adapt freely within your project context.
+
+---
+
+Made with 🗑️ mint energy.

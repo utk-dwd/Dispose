@@ -1,68 +1,32 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --radius: 1.25rem;
+    --bg: 0 0% 100%;
+    --fg: 0 0% 0%;
+    --primary: 226 100% 55%; /* blue */
+    --primary-foreground: 0 0% 100%;
   }
-  a:hover {
-    color: #747bff;
+  .dark {
+    --bg: 222 47% 8%;
+    --fg: 0 0% 100%;
+    --primary: 213 94% 68%;
+    --primary-foreground: 222 47% 8%;
   }
-  button {
-    background-color: #f9f9f9;
+  body {
+    @apply bg-white dark:bg-neutral-950 text-black dark:text-white antialiased min-h-screen;
+  }
+}
+
+@layer components {
+  .glow-hover { @apply transition-shadow duration-300 hover:shadow-glow; }
+  .card {
+    @apply bg-white border border-border rounded-2xl shadow-soft p-4 md:p-6 transition-transform duration-300 hover:scale-[1.01];
+  }
+  .mint-gradient {
+    background: linear-gradient(90deg,#00FF91 0%,#6BFFC4 100%);
   }
 }
