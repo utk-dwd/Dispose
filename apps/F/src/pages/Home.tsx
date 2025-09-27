@@ -7,17 +7,24 @@ import { Table, Th, Td, Tr } from '../components/ui/table'
 import { Link } from 'react-router-dom'
 
 export default function HomePage() {
-  const { wallet, getWallet, refreshBalance, deleteWallet, copyWallet, history } = useWallet()
+  const { wallet, getWallet, refreshBalance, deleteWallet, copyWallet, history, isGenerating } = useWallet()
 
   useEffect(() => {
-    if (!wallet) getWallet()
-  }, [wallet, getWallet])
+    if (!wallet && !isGenerating) {
+      getWallet().catch(console.error)
+    }
+  }, [wallet, isGenerating, getWallet])
 
   return (
     <div className="space-y-8">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Current Wallet</CardTitle>
+          <div>
+            <CardTitle>Current Wallet</CardTitle>
+            <p className="text-xs text-black/60 dark:text-white/60 mt-1">
+              🎲 Secured by Pyth Network entropy on Base
+            </p>
+          </div>
           <Button size="sm" variant="secondary" asChild>
             <Link to="/dapp" title="Connect to App">Dapp</Link>
           </Button>
@@ -38,9 +45,14 @@ export default function HomePage() {
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <Button onClick={getWallet}>Change</Button>
+            <Button 
+              onClick={() => getWallet().catch(console.error)} 
+              disabled={isGenerating}
+            >
+              {isGenerating ? '🎲 Generating...' : 'Change'}
+            </Button>
             <Button variant="outline" onClick={refreshBalance}>Refresh</Button>
-            <Button variant="outline" onClick={deleteWallet}>Delete</Button>
+            <Button variant="outline" onClick={() => deleteWallet().catch(console.error)}>Delete</Button>
             <Button variant="outline" onClick={copyWallet}>Copy</Button>
           </div>
         </CardContent>
